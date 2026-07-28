@@ -13,6 +13,7 @@ stats.html
 stats-*.json
 .wxt
 .playwright-cli
+output
 web-ext.config.ts
 
 # Editor directories and files
