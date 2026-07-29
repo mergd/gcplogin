@@ -5,7 +5,8 @@
 On a Google Cloud SDK OAuth page, the extension clicks the first visible
 account or the visible **Continue** / **Allow** button.
 
-It injects no UI and does not observe or modify unrelated page rendering.
+While the flow runs, a small badge appears in the corner so you can see it
+is active. It does not observe or modify unrelated page rendering.
 
 The Cloud SDK authentication-success tab closes after three seconds.
 

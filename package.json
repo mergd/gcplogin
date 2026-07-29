@@ -2,7 +2,7 @@
   "name": "gcp-auth-skip",
   "description": "Auto-scrolls and approves Google Cloud SDK auth consent when you run gcloud auth login.",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "wxt",

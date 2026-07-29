@@ -1,3 +1,4 @@
+import { showAutomationBadge } from '@/utils/automation-badge';
 import { getSettings } from '@/utils/settings';
 
 const CLOUD_SDK = /Google Cloud SDK/i;
@@ -15,6 +16,8 @@ export default defineContentScript({
   async main() {
     const settings = await getSettings();
     if (!settings.autoLogin) return;
+
+    showAutomationBadge();
 
     if (location.href.startsWith(AUTH_SUCCESS_URL)) {
       await new Promise((resolve) => setTimeout(resolve, 3_000));
@@ -57,10 +60,12 @@ function findAccount(accountEmail: string): HTMLElement | undefined {
 
   if (!accountEmail) return accounts[0];
 
-  return accounts.find(
-    (account) =>
-      account.getAttribute('data-identifier')?.trim().toLowerCase() ===
-      accountEmail,
+  return (
+    accounts.find(
+      (account) =>
+        account.getAttribute('data-identifier')?.trim().toLowerCase() ===
+        accountEmail,
+    ) ?? accounts[0]
   );
 }
 
