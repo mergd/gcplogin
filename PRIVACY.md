@@ -11,6 +11,11 @@ the account, Continue, or Allow control. It does not retain or transmit page
 content, account identifiers, authentication information, or authorization
 codes.
 
+Users may optionally enter a preferred account email in the extension popup.
+That preference is stored only in Chrome's local extension storage and is used
+only to match the account shown on the Google Account chooser. The extension
+does not transmit the preference to the developer or any external service.
+
 The extension also recognizes the exact Google Cloud SDK authentication-success
 page and closes that tab after three seconds.
 
@@ -19,4 +24,3 @@ code, or external network service.
 
 GCP Auth Skip is an independent project and is not affiliated with, endorsed by,
 or produced by Google.
-

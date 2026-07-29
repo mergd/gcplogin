@@ -1,0 +1,115 @@
+:root {
+  color: #10233f;
+  background: #f7f9fc;
+  font-family:
+    Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+}
+
+main {
+  padding: 18px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+header img {
+  object-fit: contain;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+#status {
+  margin-top: 3px;
+  color: #188038;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+body[data-enabled="false"] #status {
+  color: #68778d;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: white;
+}
+
+label span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+small {
+  display: block;
+  margin-top: 3px;
+  color: #68778d;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+input[role="switch"] {
+  width: 38px;
+  height: 22px;
+  margin: 0;
+  accent-color: #1a73e8;
+}
+
+.field {
+  display: block;
+  margin-top: 14px;
+}
+
+.field input {
+  width: 100%;
+  height: 40px;
+  margin-top: 7px;
+  padding: 0 11px;
+  border: 1px solid #cad5e3;
+  border-radius: 10px;
+  color: #10233f;
+  background: white;
+  font: inherit;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px #1a73e81f;
+}
+
+.note {
+  margin-top: 16px;
+  color: #7a8798;
+  font-size: 11px;
+  text-align: center;
+}

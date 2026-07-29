@@ -9,6 +9,16 @@ It injects no UI and does not observe or modify unrelated page rendering.
 
 The Cloud SDK authentication-success tab closes after three seconds.
 
+## Auto-login profile
+
+Open the extension popup to:
+
+- Turn auto-login on or off.
+- Enter the exact Google account email to select.
+- Leave the email blank to use the first visible account.
+
+The preference is stored only in this Chrome profile.
+
 ## Develop
 
 ```bash

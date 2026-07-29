@@ -4,16 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GCP Auth Skip artwork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --navy: #071a33;
-        --blue: #1a73e8;
-        --blue-light: #69a7f5;
+        --ink: #07111f;
+        --blue: #2f6fed;
+        --blue-bright: #4d8dff;
+        --cyan: #5ce1ff;
+        --paper: #f3f6fb;
+        --ink-text: #10233f;
+        --muted: #5b6b82;
         --red: #ea4335;
         --yellow: #fbbc04;
         --green: #34a853;
-        --paper: #f7f9fc;
-        --ink: #10233f;
+        --ok: #1f9d57;
       }
 
       * {
@@ -26,9 +35,7 @@
         height: 100%;
         margin: 0;
         overflow: hidden;
-        font-family:
-          Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: Outfit, ui-sans-serif, sans-serif;
       }
 
       body {
@@ -45,10 +52,6 @@
         overflow: hidden;
       }
 
-      body[data-view="icon"] {
-        background: #ff00ff;
-      }
-
       body[data-view="icon"] .icon-board,
       body[data-view="promo"] .promo-board,
       body[data-view="marquee"] .marquee-board,
@@ -57,379 +60,596 @@
       }
 
       .mark {
-        position: relative;
-        width: 320px;
-        height: 190px;
-      }
-
-      .cloud {
-        position: absolute;
-        right: 0;
-        bottom: 4px;
-        width: 214px;
-        height: 118px;
-        border-radius: 58px 58px 34px 34px;
-        background: var(--blue);
-      }
-
-      .cloud::before,
-      .cloud::after {
-        content: "";
-        position: absolute;
-        background: var(--blue);
-        border-radius: 50%;
-      }
-
-      .cloud::before {
-        width: 112px;
-        height: 112px;
-        left: 28px;
-        top: -58px;
-      }
-
-      .cloud::after {
-        width: 86px;
-        height: 86px;
-        right: 18px;
-        top: -31px;
-      }
-
-      .portal {
-        position: absolute;
-        z-index: 3;
-        left: 100px;
-        top: 82px;
-        width: 42px;
-        height: 42px;
-        border: 9px solid white;
-        border-radius: 50%;
-        background: var(--navy);
-      }
-
-      .key {
-        position: absolute;
-        z-index: 4;
-        left: 4px;
-        top: 91px;
-        width: 122px;
-        height: 24px;
-        border-radius: 12px 5px 5px 12px;
-        background: var(--key-color, var(--navy));
-      }
-
-      .key::before {
-        content: "";
-        position: absolute;
-        left: -40px;
-        top: -17px;
-        width: 46px;
-        height: 46px;
-        border: 14px solid var(--key-color, var(--navy));
-        border-radius: 50%;
-        background: var(--key-hole, #ff00ff);
-      }
-
-      .key::after {
-        content: "";
-        position: absolute;
-        right: 14px;
-        bottom: -20px;
-        width: 16px;
-        height: 24px;
-        background: var(--key-color, var(--navy));
-        box-shadow: 24px 0 0 var(--key-color, var(--navy));
-      }
-
-      .accents {
-        position: absolute;
-        z-index: 2;
-        right: -8px;
-        bottom: 23px;
         display: grid;
-        gap: 7px;
+        place-items: center;
       }
 
-      .accent {
-        width: 14px;
-        height: 24px;
-        border-radius: 7px;
-      }
-
-      .accent.red {
-        background: var(--red);
-      }
-
-      .accent.yellow {
-        background: var(--yellow);
-      }
-
-      .accent.green {
-        background: var(--green);
+      .mark svg {
+        display: block;
+        width: 100%;
+        height: 100%;
       }
 
       .icon-board {
-        background: #ff00ff;
+        background: transparent;
       }
 
       .icon-board .mark {
         position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 112px;
-        height: 67px;
-        transform: translate(-50%, -50%);
-      }
-
-      .icon-board .mark-inner {
-        width: 320px;
-        height: 190px;
-        transform: translateX(12px) scale(0.3);
-        transform-origin: 0 0;
+        inset: 0;
       }
 
       .promo-board,
       .marquee-board {
-        --key-color: white;
-        --key-hole: var(--navy);
+        color: white;
         background:
-          radial-gradient(circle at 12% 0%, #1a73e8 0 20%, transparent 20.5%),
-          radial-gradient(circle at 92% 100%, #34a853 0 17%, transparent 17.5%),
-          var(--navy);
+          radial-gradient(ellipse 70% 90% at 0% 0%, #1a4fb8 0%, transparent 55%),
+          radial-gradient(ellipse 55% 70% at 100% 100%, #0e8f6a 0%, transparent 50%),
+          linear-gradient(145deg, #07111f 0%, #0d2040 48%, #07111f 100%);
+      }
+
+      .promo-board::before,
+      .marquee-board::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(#ffffff08 1px, transparent 1px),
+          linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(circle at 50% 45%, #000 20%, transparent 75%);
+        opacity: 0.55;
       }
 
       .promo-board::after,
       .marquee-board::after {
         content: "";
         position: absolute;
-        inset: 0;
-        background-image: radial-gradient(#ffffff18 1px, transparent 1px);
-        background-size: 22px 22px;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        border: 1px solid #5ce1ff22;
+        left: -140px;
+        top: -180px;
+        box-shadow:
+          0 0 0 48px #5ce1ff0a,
+          inset 0 0 60px #2f6fed18;
       }
 
-      .promo-board .mark,
+      .promo-board .mark {
+        position: absolute;
+        z-index: 2;
+        left: 36px;
+        top: 50%;
+        width: 148px;
+        height: 148px;
+        transform: translateY(-50%);
+        filter: drop-shadow(0 16px 28px #00000044);
+      }
+
+      .promo-copy {
+        position: absolute;
+        z-index: 2;
+        left: 210px;
+        top: 50%;
+        transform: translateY(-50%);
+        max-width: 200px;
+      }
+
+      .promo-copy .brand {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.045em;
+        line-height: 0.95;
+      }
+
+      .promo-copy .tag {
+        margin: 12px 0 0;
+        color: #b7c9e6;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.35;
+      }
+
       .marquee-board .mark {
         position: absolute;
         z-index: 2;
-        left: 50%;
+        right: 120px;
         top: 50%;
-        transform: translate(-50%, -50%);
+        width: 280px;
+        height: 280px;
+        transform: translateY(-50%);
+        filter: drop-shadow(0 28px 60px #00000055);
       }
 
-      .marquee-board .mark {
-        transform: translate(-50%, -50%) scale(1.55);
+      .marquee-copy {
+        position: absolute;
+        z-index: 2;
+        left: 96px;
+        top: 50%;
+        transform: translateY(-50%);
+        max-width: 780px;
       }
 
-      .screenshot-board {
-        padding: 72px;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 95% 5%, #dceaff 0 22%, transparent 22.5%),
-          var(--paper);
-      }
-
-      .eyebrow {
-        margin: 0 0 12px;
-        color: var(--blue);
-        font-size: 20px;
-        font-weight: 750;
-        letter-spacing: 0.12em;
+      .marquee-copy .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 22px;
+        color: var(--cyan);
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
       }
 
-      h1 {
-        max-width: 760px;
+      .marquee-copy .kicker::before {
+        content: "";
+        width: 28px;
+        height: 2px;
+        background: var(--cyan);
+      }
+
+      .marquee-copy .brand {
         margin: 0;
-        font-size: 54px;
-        line-height: 1.04;
+        font-size: 92px;
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 0.92;
+      }
+
+      .marquee-copy .tag {
+        margin: 28px 0 0;
+        max-width: 560px;
+        color: #adc0dc;
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+      }
+
+      .marquee-copy .tag em {
+        font-style: normal;
+        color: #e8f1ff;
+      }
+
+      .dots {
+        display: inline-flex;
+        gap: 7px;
+        margin-left: 14px;
+        vertical-align: middle;
+      }
+
+      .dots i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .dots .r {
+        background: var(--red);
+      }
+
+      .dots .y {
+        background: var(--yellow);
+      }
+
+      .dots .g {
+        background: var(--green);
+      }
+
+      .screenshot-board {
+        color: var(--ink-text);
+        background:
+          radial-gradient(ellipse 50% 45% at 88% 12%, #cfe0ff 0%, transparent 60%),
+          radial-gradient(ellipse 40% 35% at 8% 90%, #c8f0df 0%, transparent 55%),
+          linear-gradient(180deg, #eef3fa 0%, #f7f9fc 55%, #e9eef6 100%);
+      }
+
+      .shot-frame {
+        position: absolute;
+        inset: 56px 64px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 36px;
+      }
+
+      .shot-header .kicker {
+        margin: 0 0 10px;
+        color: var(--blue);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .shot-header h1 {
+        margin: 0;
+        max-width: 920px;
+        font-size: 52px;
+        font-weight: 800;
         letter-spacing: -0.045em;
+        line-height: 1.02;
       }
 
-      .workflow {
+      .flow {
+        position: relative;
         display: grid;
-        grid-template-columns: 1fr 72px 1fr 72px 1fr;
+        grid-template-columns: 1.05fr 0.9fr 0.85fr;
+        gap: 28px;
         align-items: stretch;
-        margin-top: 58px;
+        min-height: 0;
       }
 
-      .step {
-        min-height: 350px;
-        padding: 30px;
-        border: 1px solid #dce4ef;
-        border-radius: 24px;
-        background: white;
-        box-shadow: 0 18px 48px #10233f12;
+      .panel {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: 28px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid #ffffff;
+        box-shadow:
+          0 1px 0 #ffffffaa inset,
+          0 24px 50px #10233f14;
+        backdrop-filter: blur(8px);
       }
 
-      .step-number {
+      .panel .label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .panel .num {
         display: grid;
-        width: 38px;
-        height: 38px;
-        margin-bottom: 28px;
+        width: 28px;
+        height: 28px;
         place-items: center;
-        border-radius: 12px;
+        border-radius: 9px;
         color: white;
         background: var(--blue);
+        font-size: 13px;
         font-weight: 800;
+        letter-spacing: 0;
       }
 
-      .step h2 {
-        margin: 0 0 10px;
-        font-size: 24px;
-        letter-spacing: -0.025em;
+      .panel h2 {
+        margin: 0 0 8px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
       }
 
-      .step p {
+      .panel p {
         margin: 0;
-        color: #52647d;
-        font-size: 17px;
-        line-height: 1.5;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .panel .stage {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        margin-top: 28px;
+        min-height: 180px;
       }
 
       .terminal {
-        margin-top: 35px;
-        padding: 22px;
-        border-radius: 14px;
-        color: #d9e7ff;
-        background: var(--navy);
-        font: 600 16px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+        width: 100%;
+        padding: 22px 24px;
+        border-radius: 18px;
+        color: #d7e6ff;
+        background: linear-gradient(180deg, #12284a 0%, #0a1628 100%);
+        box-shadow: 0 18px 36px #07111f33;
+        font: 600 18px/1.55 "IBM Plex Mono", ui-monospace, monospace;
       }
 
-      .terminal strong {
-        color: #74d890;
+      .terminal .prompt {
+        color: var(--cyan);
       }
 
-      .account {
+      .terminal .cmd {
+        color: #f4f8ff;
+      }
+
+      .terminal .blink {
+        display: inline-block;
+        width: 10px;
+        height: 22px;
+        margin-left: 4px;
+        vertical-align: -4px;
+        background: var(--cyan);
+        opacity: 0.85;
+      }
+
+      .account-card {
+        width: 100%;
         display: flex;
         align-items: center;
-        gap: 14px;
-        margin-top: 34px;
-        padding: 18px;
-        border: 2px solid #cfe0f9;
-        border-radius: 14px;
+        gap: 16px;
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: white;
+        border: 1.5px solid #d7e3f5;
+        box-shadow: 0 10px 28px #2f6fed14;
+        position: relative;
+      }
+
+      .account-card::after {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        border-radius: 24px;
+        border: 2px solid #2f6fed55;
       }
 
       .avatar {
         display: grid;
-        width: 42px;
-        height: 42px;
+        width: 48px;
+        height: 48px;
         place-items: center;
         border-radius: 50%;
         color: white;
-        background: var(--blue);
+        background: linear-gradient(145deg, #4d8dff, #2f6fed);
+        font-size: 18px;
         font-weight: 800;
       }
 
-      .account span {
-        color: #66758a;
-        font-size: 14px;
-      }
-
-      .account strong {
+      .account-meta span {
         display: block;
-        margin-top: 2px;
-        font-size: 16px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
       }
 
-      .success {
+      .account-meta strong {
+        display: block;
+        margin-top: 3px;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .auto-chip {
+        margin-left: auto;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: var(--blue);
+        background: #e8f0ff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .success-orb {
         display: grid;
-        width: 92px;
-        height: 92px;
-        margin: 38px auto 24px;
+        width: 112px;
+        height: 112px;
         place-items: center;
         border-radius: 50%;
         color: white;
-        background: var(--green);
-        font-size: 50px;
-        font-weight: 800;
+        background: radial-gradient(circle at 35% 30%, #4fd889, var(--ok));
+        box-shadow:
+          0 0 0 14px #34a85318,
+          0 18px 40px #1f9d5740;
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1;
       }
 
-      .arrow {
+      .connector {
+        position: absolute;
+        top: 52%;
+        z-index: 3;
+        width: 28px;
+        height: 28px;
         display: grid;
         place-items: center;
-        color: #9bb0ca;
-        font-size: 38px;
-        font-weight: 300;
+        border-radius: 50%;
+        color: var(--blue);
+        background: white;
+        border: 1px solid #d5e2f5;
+        box-shadow: 0 8px 18px #10233f14;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .connector.c1 {
+        left: calc(36.5% - 2px);
+      }
+
+      .connector.c2 {
+        left: calc(68.2% - 2px);
       }
     </style>
   </head>
   <body>
     <main class="artboard icon-board">
       <div class="mark">
-        <div class="mark-inner">
-          <div class="cloud"></div>
-          <div class="portal"></div>
-          <div class="key"></div>
-          <div class="accents">
-            <i class="accent red"></i>
-            <i class="accent yellow"></i>
-            <i class="accent green"></i>
-          </div>
-        </div>
+        <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="tile" x1="20" y1="8" x2="110" y2="120">
+              <stop offset="0%" stop-color="#1d4f9c" />
+              <stop offset="55%" stop-color="#123056" />
+              <stop offset="100%" stop-color="#0b2748" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="28" fill="url(#tile)" />
+          <path
+            fill="#4d8dff"
+            d="M86.5 78.5H39c-9.1 0-16.5-7.2-16.5-16.1 0-8.2 6.2-15 14.3-16 1.7-10.4 10.8-18.2 21.8-18.2 8.3 0 15.6 4.5 19.5 11.2 2.1-1.2 4.5-1.9 7.1-1.9 7.7 0 14 6.1 14.4 13.7 7.2.8 12.9 6.9 12.9 14.2 0 7.9-6.5 14.1-14.5 14.1z"
+          />
+          <path
+            fill="#2f6fed"
+            opacity="0.55"
+            d="M86.5 78.5H39c-9.1 0-16.5-7.2-16.5-16.1 0-1.4.2-2.7.5-4 2.4 6.5 8.7 11.1 16 11.1h47.5c6.3 0 11.7-4 13.7-9.6.5 1.1.8 2.3.8 3.6 0 7.9-6.5 14.1-14.5 14.1z"
+          />
+          <path
+            fill="#fff"
+            d="M52.2 52.8c-1.3-1-3.2-.2-3.2 1.4v19.6c0 1.6 1.9 2.4 3.2 1.4l12.8-9.8c1-.8 1-2.2 0-3z"
+          />
+          <path
+            fill="#5ce1ff"
+            d="M68.8 52.8c-1.3-1-3.2-.2-3.2 1.4v19.6c0 1.6 1.9 2.4 3.2 1.4l12.8-9.8c1-.8 1-2.2 0-3z"
+          />
+          <rect x="24" y="96" width="18" height="6" rx="3" fill="#ea4335" />
+          <rect x="46" y="96" width="18" height="6" rx="3" fill="#fbbc04" />
+          <rect x="68" y="96" width="18" height="6" rx="3" fill="#34a853" />
+          <rect x="90" y="96" width="14" height="6" rx="3" fill="#4d8dff" />
+        </svg>
       </div>
     </main>
 
     <main class="artboard promo-board">
       <div class="mark">
-        <div class="cloud"></div>
-        <div class="portal"></div>
-        <div class="key"></div>
-        <div class="accents">
-          <i class="accent red"></i>
-          <i class="accent yellow"></i>
-          <i class="accent green"></i>
-        </div>
+        <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="tilePromo" x1="20" y1="8" x2="110" y2="120">
+              <stop offset="0%" stop-color="#1d4f9c" />
+              <stop offset="55%" stop-color="#123056" />
+              <stop offset="100%" stop-color="#0b2748" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="28" fill="url(#tilePromo)" />
+          <path
+            fill="#4d8dff"
+            d="M86.5 78.5H39c-9.1 0-16.5-7.2-16.5-16.1 0-8.2 6.2-15 14.3-16 1.7-10.4 10.8-18.2 21.8-18.2 8.3 0 15.6 4.5 19.5 11.2 2.1-1.2 4.5-1.9 7.1-1.9 7.7 0 14 6.1 14.4 13.7 7.2.8 12.9 6.9 12.9 14.2 0 7.9-6.5 14.1-14.5 14.1z"
+          />
+          <path
+            fill="#2f6fed"
+            opacity="0.55"
+            d="M86.5 78.5H39c-9.1 0-16.5-7.2-16.5-16.1 0-1.4.2-2.7.5-4 2.4 6.5 8.7 11.1 16 11.1h47.5c6.3 0 11.7-4 13.7-9.6.5 1.1.8 2.3.8 3.6 0 7.9-6.5 14.1-14.5 14.1z"
+          />
+          <path
+            fill="#fff"
+            d="M52.2 52.8c-1.3-1-3.2-.2-3.2 1.4v19.6c0 1.6 1.9 2.4 3.2 1.4l12.8-9.8c1-.8 1-2.2 0-3z"
+          />
+          <path
+            fill="#5ce1ff"
+            d="M68.8 52.8c-1.3-1-3.2-.2-3.2 1.4v19.6c0 1.6 1.9 2.4 3.2 1.4l12.8-9.8c1-.8 1-2.2 0-3z"
+          />
+          <rect x="24" y="96" width="18" height="6" rx="3" fill="#ea4335" />
+          <rect x="46" y="96" width="18" height="6" rx="3" fill="#fbbc04" />
+          <rect x="68" y="96" width="18" height="6" rx="3" fill="#34a853" />
+          <rect x="90" y="96" width="14" height="6" rx="3" fill="#4d8dff" />
+        </svg>
+      </div>
+      <div class="promo-copy">
+        <p class="brand">GCP Auth Skip</p>
+        <p class="tag">Skip the clicks. Keep shipping.</p>
       </div>
     </main>
 
     <main class="artboard marquee-board">
+      <div class="marquee-copy">
+        <p class="kicker">Cloud CLI login helper</p>
+        <p class="brand">
+          GCP Auth Skip
+          <span class="dots" aria-hidden="true"
+            ><i class="r"></i><i class="y"></i><i class="g"></i
+          ></span>
+        </p>
+        <p class="tag">
+          Finishes <em>gcloud auth login</em> in the browser — then closes the
+          success tab for you.
+        </p>
+      </div>
       <div class="mark">
-        <div class="cloud"></div>
-        <div class="portal"></div>
-        <div class="key"></div>
-        <div class="accents">
-          <i class="accent red"></i>
-          <i class="accent yellow"></i>
-          <i class="accent green"></i>
-        </div>
+        <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="tileMarquee" x1="20" y1="8" x2="110" y2="120">
+              <stop offset="0%" stop-color="#1d4f9c" />
+              <stop offset="55%" stop-color="#123056" />
+              <stop offset="100%" stop-color="#0b2748" />
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="28" fill="url(#tileMarquee)" />
+          <path
+            fill="#4d8dff"
+            d="M86.5 78.5H39c-9.1 0-16.5-7.2-16.5-16.1 0-8.2 6.2-15 14.3-16 1.7-10.4 10.8-18.2 21.8-18.2 8.3 0 15.6 4.5 19.5 11.2 2.1-1.2 4.5-1.9 7.1-1.9 7.7 0 14 6.1 14.4 13.7 7.2.8 12.9 6.9 12.9 14.2 0 7.9-6.5 14.1-14.5 14.1z"
+          />
+          <path
+            fill="#2f6fed"
+            opacity="0.55"
+            d="M86.5 78.5H39c-9.1 0-16.5-7.2-16.5-16.1 0-1.4.2-2.7.5-4 2.4 6.5 8.7 11.1 16 11.1h47.5c6.3 0 11.7-4 13.7-9.6.5 1.1.8 2.3.8 3.6 0 7.9-6.5 14.1-14.5 14.1z"
+          />
+          <path
+            fill="#fff"
+            d="M52.2 52.8c-1.3-1-3.2-.2-3.2 1.4v19.6c0 1.6 1.9 2.4 3.2 1.4l12.8-9.8c1-.8 1-2.2 0-3z"
+          />
+          <path
+            fill="#5ce1ff"
+            d="M68.8 52.8c-1.3-1-3.2-.2-3.2 1.4v19.6c0 1.6 1.9 2.4 3.2 1.4l12.8-9.8c1-.8 1-2.2 0-3z"
+          />
+          <rect x="24" y="96" width="18" height="6" rx="3" fill="#ea4335" />
+          <rect x="46" y="96" width="18" height="6" rx="3" fill="#fbbc04" />
+          <rect x="68" y="96" width="18" height="6" rx="3" fill="#34a853" />
+          <rect x="90" y="96" width="14" height="6" rx="3" fill="#4d8dff" />
+        </svg>
       </div>
     </main>
 
     <main class="artboard screenshot-board">
-      <p class="eyebrow">Cloud CLI Login Helper</p>
-      <h1>From terminal command to authenticated session, automatically.</h1>
+      <div class="shot-frame">
+        <header class="shot-header">
+          <p class="kicker">Cloud CLI login helper</p>
+          <h1>From terminal command to authenticated session, automatically.</h1>
+        </header>
 
-      <section class="workflow">
-        <article class="step">
-          <div class="step-number">1</div>
-          <h2>Start the login</h2>
-          <p>Use the normal Google Cloud CLI command in your terminal.</p>
-          <div class="terminal"><strong>$</strong> gcloud auth login</div>
-        </article>
-
-        <div class="arrow">→</div>
-
-        <article class="step">
-          <div class="step-number">2</div>
-          <h2>Continue in Chrome</h2>
-          <p>The extension handles the repetitive account and consent controls.</p>
-          <div class="account">
-            <div class="avatar">W</div>
-            <div>
-              <span>Google Cloud SDK</span>
-              <strong>Developer account</strong>
+        <section class="flow">
+          <article class="panel">
+            <div class="label"><span class="num">1</span> Terminal</div>
+            <h2>Start the login</h2>
+            <p>Run the normal Google Cloud CLI command.</p>
+            <div class="stage">
+              <div class="terminal">
+                <span class="prompt">$</span>
+                <span class="cmd"> gcloud auth login</span
+                ><span class="blink"></span>
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
 
-        <div class="arrow">→</div>
+          <article class="panel">
+            <div class="label"><span class="num">2</span> Chrome</div>
+            <h2>Continue for you</h2>
+            <p>Account pick and consent clicks, handled.</p>
+            <div class="stage">
+              <div class="account-card">
+                <div class="avatar">W</div>
+                <div class="account-meta">
+                  <span>Google Cloud SDK</span>
+                  <strong>Continue</strong>
+                </div>
+                <div class="auto-chip">Auto</div>
+              </div>
+            </div>
+          </article>
 
-        <article class="step">
-          <div class="step-number">3</div>
-          <h2>Return to work</h2>
-          <p>The success tab closes after three seconds.</p>
-          <div class="success">✓</div>
-        </article>
-      </section>
+          <article class="panel">
+            <div class="label"><span class="num">3</span> Done</div>
+            <h2>Return to work</h2>
+            <p>Success tab closes after three seconds.</p>
+            <div class="stage">
+              <div class="success-orb">✓</div>
+            </div>
+          </article>
+
+          <div class="connector c1">›</div>
+          <div class="connector c2">›</div>
+        </section>
+      </div>
     </main>
 
     <script>

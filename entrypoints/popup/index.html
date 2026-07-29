@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GCP Auth Skip</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="/icon/48.png" alt="" width="40" height="40" />
+        <div>
+          <h1>GCP Auth Skip</h1>
+          <p id="status">Loading…</p>
+        </div>
+      </header>
+
+      <label class="toggle-row">
+        <span>
+          <strong>Auto-login</strong>
+          <small>Handle Cloud SDK login pages</small>
+        </span>
+        <input id="autoLogin" type="checkbox" role="switch" />
+      </label>
+
+      <label class="field">
+        <span>Account email</span>
+        <input
+          id="accountEmail"
+          type="email"
+          inputmode="email"
+          autocomplete="username"
+          placeholder="First account shown"
+        />
+        <small>Leave blank to use the first visible account.</small>
+      </label>
+
+      <p class="note">Changes apply to the next login.</p>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

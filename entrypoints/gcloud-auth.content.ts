@@ -1,3 +1,5 @@
+import { getSettings } from '@/utils/settings';
+
 const CLOUD_SDK = /Google Cloud SDK/i;
 const ACTION = /^(allow|continue)$/i;
 const MAX_ATTEMPTS = 20;
@@ -11,25 +13,22 @@ export default defineContentScript({
   ],
   runAt: 'document_idle',
   async main() {
+    const settings = await getSettings();
+    if (!settings.autoLogin) return;
+
     if (location.href.startsWith(AUTH_SUCCESS_URL)) {
-      const removeBadge = showAutomationBadge();
       await new Promise((resolve) => setTimeout(resolve, 3_000));
-      await browser.runtime.sendMessage({ type: CLOSE_TAB_MESSAGE }).catch(() => {
-        removeBadge();
-      });
+      await browser.runtime
+        .sendMessage({ type: CLOSE_TAB_MESSAGE })
+        .catch(() => undefined);
       return;
     }
 
-    let removeBadge: (() => void) | undefined;
-
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
       if (CLOUD_SDK.test(document.body?.innerText ?? '')) {
-        removeBadge ??= showAutomationBadge();
-
-        const account = findVisible<HTMLElement>('[data-identifier]');
+        const account = findAccount(settings.accountEmail);
         if (account) {
           account.click();
-          removeBadge();
           return;
         }
 
@@ -42,54 +41,27 @@ export default defineContentScript({
 
         if (action) {
           action.click();
-          removeBadge();
           return;
         }
       }
 
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
-
-    removeBadge?.();
   },
 });
 
-function showAutomationBadge(): () => void {
-  const host = document.createElement('div');
-  host.setAttribute('data-gcp-auth-skip', 'active');
-  host.style.cssText = [
-    'position:fixed',
-    'top:16px',
-    'right:16px',
-    'width:36px',
-    'height:36px',
-    'z-index:2147483647',
-    'pointer-events:none',
-  ].join(';');
+function findAccount(accountEmail: string): HTMLElement | undefined {
+  const accounts = [...document.querySelectorAll<HTMLElement>(
+    '[data-identifier]',
+  )].filter(isVisible);
 
-  const shadow = host.attachShadow({ mode: 'closed' });
-  const image = document.createElement('img');
-  image.src = browser.runtime.getURL('/icon/32.png');
-  image.alt = 'GCP Auth Skip is active';
-  image.width = 32;
-  image.height = 32;
-  image.style.cssText = [
-    'display:block',
-    'width:32px',
-    'height:32px',
-    'padding:2px',
-    'border-radius:9px',
-    'background:#fff',
-    'box-shadow:0 2px 10px rgba(0,0,0,.18)',
-  ].join(';');
-  shadow.append(image);
-  document.documentElement.append(host);
+  if (!accountEmail) return accounts[0];
 
-  return () => host.remove();
-}
-
-function findVisible<T extends HTMLElement>(selector: string): T | undefined {
-  return [...document.querySelectorAll<T>(selector)].find(isVisible);
+  return accounts.find(
+    (account) =>
+      account.getAttribute('data-identifier')?.trim().toLowerCase() ===
+      accountEmail,
+  );
 }
 
 function isVisible(element: HTMLElement): boolean {

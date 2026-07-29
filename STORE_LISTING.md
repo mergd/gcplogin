@@ -21,12 +21,15 @@ English
 GCP Auth Skip removes the repetitive browser steps from `gcloud auth login`.
 
 When a Google Cloud SDK authorization page appears, the extension selects the
-first visible Google account and clicks the visible Continue or Allow button.
-After authentication succeeds, it closes the Cloud SDK success tab after three
-seconds.
+configured Google account—or the first visible account if none is configured—
+and clicks the visible Continue or Allow button. After authentication succeeds,
+it closes the Cloud SDK success tab after three seconds.
 
 Features:
 
+- Lets the user enable or pause auto-login from the extension popup.
+- Supports an optional preferred-account email stored only in browser-local
+  extension storage.
 - Works only on Google Account pages for Google Cloud SDK authorization.
 - Closes only the exact Google Cloud SDK authentication-success page.
 - Injects no interface, ads, analytics, or tracking.
@@ -60,7 +63,8 @@ tab three seconds after it loads.
 
 ## Privacy-practices answers
 
-- Handles personally identifiable information: **No**
+- Optional account email preference: **Stored locally; not collected or
+  transmitted**
 - Handles authentication information: **No**
 - Handles personal communications: **No**
 - Handles location, web history, user activity, or website content: **No**
@@ -72,6 +76,9 @@ tab three seconds after it loads.
 The script reads visible page text locally only to determine whether the current
 page belongs to the Google Cloud SDK authorization flow. It does not retain,
 log, collect, or transmit that text.
+
+If the user enters an account email in the popup, the extension stores it in
+`chrome.storage.local` and uses it only to match the visible account chooser.
 
 ## Required assets
 
