@@ -17,9 +17,8 @@ export default defineContentScript({
     const settings = await getSettings();
     if (!settings.autoLogin) return;
 
-    showAutomationBadge();
-
     if (location.href.startsWith(AUTH_SUCCESS_URL)) {
+      showAutomationBadge();
       await new Promise((resolve) => setTimeout(resolve, 3_000));
       await browser.runtime
         .sendMessage({ type: CLOSE_TAB_MESSAGE })
@@ -29,6 +28,8 @@ export default defineContentScript({
 
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
       if (CLOUD_SDK.test(document.body?.innerText ?? '')) {
+        showAutomationBadge();
+
         const account = findAccount(settings.accountEmail);
         if (account) {
           account.click();

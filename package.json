@@ -2,7 +2,7 @@
   "name": "gcp-auth-skip",
   "description": "Auto-scrolls and approves Google Cloud SDK auth consent when you run gcloud auth login.",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -12,9 +12,13 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
+    "cws:status": "node scripts/cws-publish.mjs --status",
+    "cws:upload": "node scripts/cws-publish.mjs --upload-only",
+    "cws:publish": "node scripts/cws-publish.mjs",
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "google-auth-library": "^11.0.0",
     "typescript": "^5.9.3",
     "vite": "^8.1.5",
     "web-ext": "^10.5.0",
