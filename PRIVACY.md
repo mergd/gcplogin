@@ -12,12 +12,12 @@ content, account identifiers, authentication information, or authorization
 codes.
 
 Users may optionally enter a preferred account email, password, and TOTP
-authenticator secret in the extension popup. Those values are stored only in
-Chrome's local extension storage and are used only to fill Google Account
-sign-in fields during a Google Cloud SDK authorization flow. The extension
-does not transmit them to the developer or any external service. Passkeys are
-not stored; when a password is configured the extension prefers password +
-TOTP over passkeys.
+authenticator secret in the extension popup, and may create a Google passkey
+whose private key is stored only in Chrome's local extension storage. Those
+values are used only to complete Google Account sign-in during a Google Cloud
+SDK authorization flow (or, for passkey enrollment, on Google Account passkey
+pages). The extension does not transmit them to the developer or any external
+service. Existing Chrome, iCloud, or 1Password passkeys are not imported.
 
 The extension also recognizes the exact Google Cloud SDK authentication-success
 page and closes that tab after three seconds.

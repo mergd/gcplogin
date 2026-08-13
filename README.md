@@ -6,8 +6,8 @@ On a Google Cloud SDK OAuth page, the extension finishes sign-in without
 waiting for clicks: it fills the configured email, password, and authenticator
 code, selects the account, and clicks **Continue** / **Allow**.
 
-If a password is saved, passkey screens are skipped in favor of password + TOTP.
-If no password is saved, passkey prompts are clicked; Touch ID may still appear.
+If a local passkey is enrolled, Cloud SDK login uses that instead of Touch ID.
+Otherwise, a saved password skips passkey screens in favor of password + TOTP.
 
 While the flow runs, a small badge appears in the corner so you can see it
 is active. It does not observe or modify unrelated page rendering.
@@ -22,6 +22,8 @@ Open the extension popup to:
 - Enter the exact Google account email to select or type on the identifier page.
 - Optionally store a password for Google's password challenge.
 - Optionally store a Google Authenticator TOTP secret (base32 or `otpauth://` URL).
+- Set up a Google passkey stored in this Chrome profile (this is a new passkey,
+  not an import from 1Password or iCloud).
 - Leave the email blank to use the first visible account.
 
 The preference is stored only in this Chrome profile.

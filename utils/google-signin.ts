@@ -1,5 +1,5 @@
 const CLOUD_SDK = /Google Cloud SDK/i;
-const CLOUD_SDK_CLIENT = '32555940559';
+export const CLOUD_SDK_CLIENT = '32555940559';
 const FLOW_FLAG = 'gcp-auth-skip-flow';
 
 const NEXT = /^(next|continuer|siguiente|weiter|avançar|продолжить)$/i;
@@ -11,6 +11,10 @@ const TOTP_METHOD =
 const PASSKEY_METHOD = /use (your )?passkey|sign in with (a )?passkey|passkey/i;
 const SKIP_LABELS = /create a passkey|not now|skip|cancel|dismiss/i;
 
+export function isCloudSdkUrl(url = location.href): boolean {
+  return url.includes(CLOUD_SDK_CLIENT);
+}
+
 export function isCloudSdkFlow(): boolean {
   try {
     if (sessionStorage.getItem(FLOW_FLAG) === '1') return true;
@@ -19,8 +23,7 @@ export function isCloudSdkFlow(): boolean {
   }
 
   const marked =
-    location.href.includes(CLOUD_SDK_CLIENT) ||
-    CLOUD_SDK.test(document.body?.innerText ?? '');
+    isCloudSdkUrl() || CLOUD_SDK.test(document.body?.innerText ?? '');
 
   if (marked) {
     try {
@@ -126,6 +129,11 @@ export function findPasskeyAction(): HTMLElement | undefined {
   if (!/passkey/i.test(document.body?.innerText ?? '')) return undefined;
 
   return findButtonByLabel(PASSKEY_ACTION);
+}
+
+export function findCreatePasskeyAction(): HTMLElement | undefined {
+  return findClickableByLabel(/^(create a passkey|add a passkey|create passkey)$/i)
+    ?? findClickableByLabel(/create a passkey|add a passkey/i);
 }
 
 export function findPasswordFallback(preferPassword = false): HTMLElement | undefined {

@@ -3,6 +3,7 @@ import {
   fillInput,
   findAccount,
   findConsentAction,
+  findCreatePasskeyAction,
   findEmailInput,
   findIdentifierNext,
   findPasskeyAction,
@@ -14,24 +15,37 @@ import {
   findTotpNext,
   isCloudSdkFlow,
 } from '@/utils/google-signin';
+import {
+  CLOSE_TAB_MESSAGE,
+  PASSKEY_STATUS_MESSAGE,
+} from '@/utils/messages';
 import { getSettings, type Settings } from '@/utils/settings';
 import { generateTotp, TOTP_PERIOD_SECONDS } from '@/utils/totp';
 
 const MAX_ATTEMPTS = 40;
 const AUTH_SUCCESS_URL = 'https://docs.cloud.google.com/sdk/auth_success';
-const CLOSE_TAB_MESSAGE = 'gcp-auth-skip:close-tab';
 
 export default defineContentScript({
   matches: [
     'https://accounts.google.com/*',
+    'https://myaccount.google.com/*',
     'https://docs.cloud.google.com/sdk/auth_success*',
   ],
   runAt: 'document_idle',
   async main() {
-    const settings = await getSettings();
-    if (!settings.autoLogin) return;
+    const [settings, passkeyStatus] = await Promise.all([
+      getSettings(),
+      browser.runtime
+        .sendMessage({ type: PASSKEY_STATUS_MESSAGE })
+        .then((value) => ({
+          enrolled: Boolean(value?.enrolled),
+          enrollArmed: Boolean(value?.enrollArmed),
+        }))
+        .catch(() => ({ enrolled: false, enrollArmed: false })),
+    ]);
 
     if (location.href.startsWith(AUTH_SUCCESS_URL)) {
+      if (!settings.autoLogin) return;
       showAutomationBadge();
       await new Promise((resolve) => setTimeout(resolve, 3_000));
       await browser.runtime
@@ -41,11 +55,24 @@ export default defineContentScript({
     }
 
     let busyUntil = 0;
+    let enrollArmed = passkeyStatus.enrollArmed;
 
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
-      if (isCloudSdkFlow()) {
+      if (enrollArmed) {
         showAutomationBadge();
-        if (Date.now() >= busyUntil && (await advanceSignIn(settings))) {
+        const create = findCreatePasskeyAction();
+        if (create && Date.now() >= busyUntil) {
+          create.click();
+          busyUntil = Date.now() + 900;
+        }
+      }
+
+      if (settings.autoLogin && isCloudSdkFlow()) {
+        showAutomationBadge();
+        if (
+          Date.now() >= busyUntil &&
+          (await advanceSignIn(settings, passkeyStatus.enrolled))
+        ) {
           busyUntil = Date.now() + 900;
         }
       }
@@ -55,7 +82,10 @@ export default defineContentScript({
   },
 });
 
-async function advanceSignIn(settings: Settings): Promise<boolean> {
+async function advanceSignIn(
+  settings: Settings,
+  hasPasskey: boolean,
+): Promise<boolean> {
   const account = findAccount(settings.accountEmail);
   if (account) {
     account.click();
@@ -74,8 +104,16 @@ async function advanceSignIn(settings: Settings): Promise<boolean> {
     }
   }
 
+  if (hasPasskey && !email) {
+    const passkey = findPasskeyAction();
+    if (passkey) {
+      passkey.click();
+      return true;
+    }
+  }
+
   const password = findPasswordInput();
-  if (password && settings.accountPassword) {
+  if (password && settings.accountPassword && !hasPasskey) {
     if (password.value !== settings.accountPassword) {
       fillInput(password, settings.accountPassword);
     }
@@ -86,7 +124,7 @@ async function advanceSignIn(settings: Settings): Promise<boolean> {
     }
   }
 
-  if (settings.totpSecret && !email && !password) {
+  if (settings.totpSecret && !email && !password && !hasPasskey) {
     const totpInput = findTotpInput();
     if (totpInput) {
       const remaining =
@@ -115,18 +153,18 @@ async function advanceSignIn(settings: Settings): Promise<boolean> {
     }
   }
 
-  if (!settings.accountPassword) {
-    const passkey = findPasskeyAction();
-    if (passkey) {
-      passkey.click();
+  if (!hasPasskey && settings.accountPassword && !password) {
+    const fallback = findPasswordFallback(true);
+    if (fallback) {
+      fallback.click();
       return true;
     }
   }
 
-  if (settings.accountPassword && !password) {
-    const fallback = findPasswordFallback(true);
-    if (fallback) {
-      fallback.click();
+  if (!hasPasskey) {
+    const passkey = findPasskeyAction();
+    if (passkey && !settings.accountPassword) {
+      passkey.click();
       return true;
     }
   }

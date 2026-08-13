@@ -63,6 +63,19 @@
         </small>
       </label>
 
+      <section class="passkey">
+        <span>Passkey</span>
+        <p id="passkeyStatus">Loading…</p>
+        <div class="actions">
+          <button id="armPasskey" type="button">Set up passkey</button>
+          <button id="removePasskey" type="button" hidden>Remove</button>
+        </div>
+        <small>
+          Creates a Google passkey stored only in this Chrome profile. After
+          arming, add a passkey on the Google page that opens.
+        </small>
+      </section>
+
       <p class="note">Changes apply to the next login.</p>
     </main>
     <script type="module" src="./main.ts"></script>

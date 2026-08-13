@@ -113,3 +113,43 @@ input[role="switch"] {
   font-size: 11px;
   text-align: center;
 }
+
+.passkey {
+  margin-top: 14px;
+}
+
+.passkey > span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#passkeyStatus {
+  margin-top: 6px;
+  color: #68778d;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+button {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #cad5e3;
+  border-radius: 10px;
+  color: #10233f;
+  background: white;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+#armPasskey {
+  color: white;
+  background: #1a73e8;
+  border-color: #1a73e8;
+}
