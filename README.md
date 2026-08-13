@@ -2,8 +2,12 @@
 
 ## What it does
 
-On a Google Cloud SDK OAuth page, the extension clicks the first visible
-account or the visible **Continue** / **Allow** button.
+On a Google Cloud SDK OAuth page, the extension finishes sign-in without
+waiting for clicks: it fills the configured email, password, and authenticator
+code, selects the account, and clicks **Continue** / **Allow**.
+
+If a password is saved, passkey screens are skipped in favor of password + TOTP.
+If no password is saved, passkey prompts are clicked; Touch ID may still appear.
 
 While the flow runs, a small badge appears in the corner so you can see it
 is active. It does not observe or modify unrelated page rendering.
@@ -15,7 +19,9 @@ The Cloud SDK authentication-success tab closes after three seconds.
 Open the extension popup to:
 
 - Turn auto-login on or off.
-- Enter the exact Google account email to select.
+- Enter the exact Google account email to select or type on the identifier page.
+- Optionally store a password for Google's password challenge.
+- Optionally store a Google Authenticator TOTP secret (base32 or `otpauth://` URL).
 - Leave the email blank to use the first visible account.
 
 The preference is stored only in this Chrome profile.

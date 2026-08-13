@@ -4,7 +4,7 @@ export default defineConfig({
   manifest: {
     name: 'GCP Auth Skip',
     description:
-      'Clicks through the Google Cloud SDK account and consent screens.',
+      'Fills Google Cloud SDK sign-in, including password and authenticator codes.',
     permissions: ['storage'],
     host_permissions: [
       'https://accounts.google.com/*',

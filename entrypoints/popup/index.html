@@ -35,6 +35,34 @@
         <small>Leave blank to use the first visible account.</small>
       </label>
 
+      <label class="field">
+        <span>Password</span>
+        <input
+          id="accountPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Optional"
+        />
+        <small>
+          Stored only in this Chrome profile. Used when Google asks for a
+          password. If a password is saved, passkey screens are skipped.
+        </small>
+      </label>
+
+      <label class="field">
+        <span>Authenticator secret</span>
+        <input
+          id="totpSecret"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Base32 or otpauth URL"
+        />
+        <small>
+          Google Authenticator TOTP secret. Used to fill the 6-digit code.
+        </small>
+      </label>
+
       <p class="note">Changes apply to the next login.</p>
     </main>
     <script type="module" src="./main.ts"></script>

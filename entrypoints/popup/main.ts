@@ -3,6 +3,8 @@ import { getSettings, saveSettings } from '@/utils/settings';
 
 const autoLogin = requireElement('#autoLogin', HTMLInputElement);
 const accountEmail = requireElement('#accountEmail', HTMLInputElement);
+const accountPassword = requireElement('#accountPassword', HTMLInputElement);
+const totpSecret = requireElement('#totpSecret', HTMLInputElement);
 const status = requireElement('#status', HTMLParagraphElement);
 
 let saveTimer: ReturnType<typeof setTimeout> | undefined;
@@ -13,6 +15,8 @@ async function init(): Promise<void> {
   const settings = await getSettings();
   autoLogin.checked = settings.autoLogin;
   accountEmail.value = settings.accountEmail;
+  accountPassword.value = settings.accountPassword;
+  totpSecret.value = settings.totpSecret;
   paintStatus();
 
   autoLogin.addEventListener('change', () => {
@@ -20,10 +24,12 @@ async function init(): Promise<void> {
     void persist();
   });
 
-  accountEmail.addEventListener('input', () => {
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => void persist(), 250);
-  });
+  for (const field of [accountEmail, accountPassword, totpSecret]) {
+    field.addEventListener('input', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => void persist(), 250);
+    });
+  }
 }
 
 function paintStatus(): void {
@@ -35,6 +41,8 @@ async function persist(): Promise<void> {
   await saveSettings({
     autoLogin: autoLogin.checked,
     accountEmail: accountEmail.value,
+    accountPassword: accountPassword.value,
+    totpSecret: totpSecret.value,
   });
 }
 
