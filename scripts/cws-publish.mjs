@@ -5,13 +5,16 @@
  * Required env:
  *   CWS_SERVICE_ACCOUNT_JSON  — service account key JSON
  *   CWS_PUBLISHER_ID          — publisher UUID
- *   CWS_EXTENSION_ID          — 32-character extension ID
+ *
+ * The Chrome Web Store item is this extension only. Do not read
+ * CWS_EXTENSION_ID from the environment — that global secret is Beli Maps.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { JWT } from 'google-auth-library';
 
+const EXTENSION_ID = 'jjpjdklgopjemafkhmdninfoalcaoilg';
 const SCOPE = 'https://www.googleapis.com/auth/chromewebstore';
 const API = 'https://chromewebstore.googleapis.com';
 
@@ -160,11 +163,10 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const serviceAccountJson = requireEnv('CWS_SERVICE_ACCOUNT_JSON');
   const publisherId = requireEnv('CWS_PUBLISHER_ID');
-  const extensionId = requireEnv('CWS_EXTENSION_ID');
   const token = await getAccessToken(serviceAccountJson);
 
   if (args.statusOnly) {
-    console.log(JSON.stringify(await fetchStatus(token, publisherId, extensionId), null, 2));
+    console.log(JSON.stringify(await fetchStatus(token, publisherId, EXTENSION_ID), null, 2));
     return;
   }
 
@@ -174,7 +176,7 @@ async function main() {
   console.log(`Uploading ${zipPath}…`);
   console.log(
     'Upload OK:',
-    JSON.stringify(await uploadZip(token, publisherId, extensionId, zipPath), null, 2),
+    JSON.stringify(await uploadZip(token, publisherId, EXTENSION_ID, zipPath), null, 2),
   );
 
   if (args.uploadOnly) {
@@ -185,11 +187,11 @@ async function main() {
   console.log('Submitting for publish/review…');
   console.log(
     'Publish submitted:',
-    JSON.stringify(await publishItem(token, publisherId, extensionId), null, 2),
+    JSON.stringify(await publishItem(token, publisherId, EXTENSION_ID), null, 2),
   );
   console.log(
     'Current status:',
-    JSON.stringify(await fetchStatus(token, publisherId, extensionId), null, 2),
+    JSON.stringify(await fetchStatus(token, publisherId, EXTENSION_ID), null, 2),
   );
 }
 
