@@ -5,9 +5,10 @@ const FLOW_FLAG = 'gcp-auth-skip-flow';
 const NEXT = /^(next|continuer|siguiente|weiter|avançar|продолжить)$/i;
 const PASSKEY_ACTION = /^(continue|try again)$/i;
 const TRY_ANOTHER_WAY = /try another way/i;
-const PASSWORD_METHOD = /^(enter your password|use your password)$/i;
+const PASSWORD_METHOD = /enter your password|use your password/i;
 const TOTP_METHOD =
   /google authenticator|authenticator app|verification code from/i;
+const PASSKEY_CHOICE = /use your passkey|sign in with (a )?passkey/i;
 const PASSKEY_METHOD = /use (your )?passkey|sign in with (a )?passkey|passkey/i;
 const SKIP_LABELS = /create a passkey|not now|skip|cancel|dismiss/i;
 
@@ -123,6 +124,9 @@ export function findConsentAction(): HTMLElement | undefined {
 }
 
 export function findPasskeyAction(): HTMLElement | undefined {
+  const choice = findClickableByLabel(PASSKEY_CHOICE);
+  if (choice) return choice;
+
   const labeled = findButtonByLabel(PASSKEY_METHOD);
   if (labeled && !SKIP_LABELS.test(labeled.innerText)) return labeled;
 
@@ -131,13 +135,17 @@ export function findPasskeyAction(): HTMLElement | undefined {
   return findButtonByLabel(PASSKEY_ACTION);
 }
 
+export function findPasswordMethod(): HTMLElement | undefined {
+  return findClickableByLabel(PASSWORD_METHOD);
+}
+
 export function findCreatePasskeyAction(): HTMLElement | undefined {
   return findClickableByLabel(/^(create a passkey|add a passkey|create passkey)$/i)
     ?? findClickableByLabel(/create a passkey|add a passkey/i);
 }
 
 export function findPasswordFallback(preferPassword = false): HTMLElement | undefined {
-  const passwordMethod = findClickableByLabel(PASSWORD_METHOD);
+  const passwordMethod = findPasswordMethod();
   if (passwordMethod) return passwordMethod;
 
   if (hasPasskeyPrompt() && !preferPassword) return undefined;
@@ -177,13 +185,23 @@ function findButtonByLabel(pattern: RegExp): HTMLElement | undefined {
 }
 
 function findClickableByLabel(pattern: RegExp): HTMLElement | undefined {
-  return [...document.querySelectorAll<HTMLElement>(
-    'button, [role="button"], li, div[data-challengetype]',
-  )].find((element) => {
+  const matches = [
+    ...document.querySelectorAll<HTMLElement>(
+      'button, [role="button"], [role="link"], [role="option"], li, div[data-challengetype]',
+    ),
+  ].filter((element) => {
     if (!isVisible(element)) return false;
-    const label = element.innerText.trim();
-    return pattern.test(label) && !SKIP_LABELS.test(label);
+    const label = element.innerText.replace(/\s+/g, ' ').trim();
+    return (
+      pattern.test(label) &&
+      !SKIP_LABELS.test(label) &&
+      label.length < 80
+    );
   });
+
+  return matches.sort(
+    (left, right) => left.innerText.length - right.innerText.length,
+  )[0];
 }
 
 export function hasPasskeyPrompt(): boolean {

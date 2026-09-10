@@ -8,6 +8,7 @@ import {
   findIdentifierNext,
   findPasskeyAction,
   findPasswordFallback,
+  findPasswordMethod,
   findPasswordInput,
   findPasswordNext,
   findTotpFallback,
@@ -104,11 +105,19 @@ async function advanceSignIn(
     }
   }
 
-  if (hasPasskey && !email) {
-    const passkey = findPasskeyAction();
-    if (passkey) {
-      passkey.click();
-      return true;
+  if (!email) {
+    if (hasPasskey) {
+      const passkey = findPasskeyAction();
+      if (passkey) {
+        passkey.click();
+        return true;
+      }
+    } else if (settings.accountPassword) {
+      const passwordMethod = findPasswordMethod();
+      if (passwordMethod) {
+        passwordMethod.click();
+        return true;
+      }
     }
   }
 
