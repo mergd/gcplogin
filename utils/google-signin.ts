@@ -1,5 +1,8 @@
-const CLOUD_SDK = /Google Cloud SDK/i;
-export const CLOUD_SDK_CLIENT = '32555940559';
+const CLOUD_SDK = /Google Cloud SDK|Google Auth Library/i;
+export const CLOUD_SDK_CLIENTS = [
+  '32555940559',
+  '764086051850',
+] as const;
 const FLOW_FLAG = 'gcp-auth-skip-flow';
 
 const NEXT = /^(next|continuer|siguiente|weiter|avançar|продолжить)$/i;
@@ -13,7 +16,7 @@ const PASSKEY_METHOD = /use (your )?passkey|sign in with (a )?passkey|passkey/i;
 const SKIP_LABELS = /create a passkey|not now|skip|cancel|dismiss/i;
 
 export function isCloudSdkUrl(url = location.href): boolean {
-  return url.includes(CLOUD_SDK_CLIENT);
+  return CLOUD_SDK_CLIENTS.some((client) => url.includes(client));
 }
 
 export function isCloudSdkFlow(): boolean {

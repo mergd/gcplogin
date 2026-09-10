@@ -2,9 +2,12 @@
 
 ## What it does
 
-On a Google Cloud SDK OAuth page, the extension finishes sign-in without
-waiting for clicks: it fills the configured email, password, and authenticator
-code, selects the account, and clicks **Continue** / **Allow**.
+On a Google Cloud SDK or Google Auth Library OAuth page, the extension finishes
+sign-in without waiting for clicks: it fills the configured email, password,
+and authenticator code, selects the account, and clicks **Continue** / **Allow**.
+
+It supports both `gcloud auth login` (including `--update-adc`) and
+`gcloud auth application-default login`.
 
 If a local passkey is enrolled, Cloud SDK login uses that instead of Touch ID.
 Otherwise, a saved password skips passkey screens in favor of password + TOTP.

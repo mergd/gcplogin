@@ -1,4 +1,4 @@
-import { CLOUD_SDK_CLIENT } from '@/utils/google-signin';
+import { CLOUD_SDK_CLIENTS } from '@/utils/google-signin';
 import {
   CLOSE_TAB_MESSAGE,
   PASSKEY_ARM_MESSAGE,
@@ -123,7 +123,10 @@ async function handleGet(
   tabUrl?: string,
 ): Promise<WebAuthnPageResponse> {
   const cloudSdk =
-    request.cloudSdk || Boolean(tabUrl?.includes(CLOUD_SDK_CLIENT));
+    request.cloudSdk ||
+    Boolean(
+      tabUrl && CLOUD_SDK_CLIENTS.some((client) => tabUrl.includes(client)),
+    );
   const passkey = await getStoredPasskey();
   if (
     !cloudSdk ||

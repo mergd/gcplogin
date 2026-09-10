@@ -18,12 +18,13 @@ English
 
 ## Detailed description
 
-GCP Auth Skip removes the repetitive browser steps from `gcloud auth login`.
+GCP Auth Skip removes the repetitive browser steps from `gcloud auth login`
+and `gcloud auth application-default login`.
 
-When a Google Cloud SDK authorization page appears, the extension can select
-the configured Google account, fill an optional password and authenticator
-code, complete an optional locally stored Google passkey, and click Continue
-or Allow. After authentication succeeds, it closes the Cloud SDK success tab
+When a Google Cloud SDK or Google Auth Library authorization page appears, the
+extension can select the configured Google account, fill an optional password
+and authenticator code, complete an optional locally stored Google passkey, and
+click Continue or Allow. After authentication succeeds, it closes the Cloud SDK success tab
 after three seconds.
 
 Features:
