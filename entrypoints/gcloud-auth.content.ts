@@ -23,7 +23,8 @@ import {
 import { getSettings, type Settings } from '@/utils/settings';
 import { generateTotp, TOTP_PERIOD_SECONDS } from '@/utils/totp';
 
-const MAX_ATTEMPTS = 40;
+const FALLBACK_SCAN_MS = 1_000;
+const ACTION_SETTLE_MS = 900;
 const AUTH_SUCCESS_URL = 'https://docs.cloud.google.com/sdk/auth_success';
 
 export default defineContentScript({
@@ -56,30 +57,67 @@ export default defineContentScript({
     }
 
     let busyUntil = 0;
-    let enrollArmed = passkeyStatus.enrollArmed;
+    const enrollArmed = passkeyStatus.enrollArmed;
+    let running = false;
+    let rerunRequested = false;
 
-    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
-      if (enrollArmed) {
-        showAutomationBadge();
-        const create = findCreatePasskeyAction();
-        if (create && Date.now() >= busyUntil) {
-          create.click();
-          busyUntil = Date.now() + 900;
-        }
+    const advance = async () => {
+      if (running) {
+        rerunRequested = true;
+        return;
       }
 
-      if (settings.autoLogin && isCloudSdkFlow()) {
-        showAutomationBadge();
-        if (
-          Date.now() >= busyUntil &&
-          (await advanceSignIn(settings, passkeyStatus.enrolled))
-        ) {
-          busyUntil = Date.now() + 900;
+      running = true;
+      try {
+        if (enrollArmed) {
+          showAutomationBadge();
+          const create = findCreatePasskeyAction();
+          if (create && Date.now() >= busyUntil) {
+            create.click();
+            busyUntil = Date.now() + ACTION_SETTLE_MS;
+          }
+        }
+
+        if (settings.autoLogin && isCloudSdkFlow()) {
+          showAutomationBadge();
+          if (
+            Date.now() >= busyUntil &&
+            (await advanceSignIn(settings, passkeyStatus.enrolled))
+          ) {
+            busyUntil = Date.now() + ACTION_SETTLE_MS;
+          }
+        }
+      } finally {
+        running = false;
+        if (rerunRequested) {
+          rerunRequested = false;
+          void advance();
         }
       }
+    };
 
-      await new Promise((resolve) => setTimeout(resolve, 400));
-    }
+    const observer = new MutationObserver(() => {
+      void advance();
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+
+    const fallbackScan = window.setInterval(() => {
+      void advance();
+    }, FALLBACK_SCAN_MS);
+
+    window.addEventListener(
+      'pagehide',
+      () => {
+        observer.disconnect();
+        window.clearInterval(fallbackScan);
+      },
+      { once: true },
+    );
+
+    await advance();
   },
 });
 
