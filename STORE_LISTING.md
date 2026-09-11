@@ -33,6 +33,8 @@ Features:
 - Supports an optional preferred-account email, password, TOTP secret, and
   locally generated Google passkey stored only in browser-local extension
   storage.
+- Prefers the configured password on Google's password/passkey choice screen,
+  using the local passkey only when no password is configured.
 - Works only on Google Account pages for Google Cloud SDK authorization.
 - Closes only the exact Google Cloud SDK authentication-success page.
 - Injects no interface, ads, analytics, or tracking.

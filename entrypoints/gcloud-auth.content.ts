@@ -125,6 +125,7 @@ async function advanceSignIn(
   settings: Settings,
   hasPasskey: boolean,
 ): Promise<boolean> {
+  const preferPassword = Boolean(settings.accountPassword) || !hasPasskey;
   const account = findAccount(settings.accountEmail);
   if (account) {
     account.click();
@@ -144,23 +145,23 @@ async function advanceSignIn(
   }
 
   if (!email) {
-    if (hasPasskey) {
-      const passkey = findPasskeyAction();
-      if (passkey) {
-        passkey.click();
-        return true;
-      }
-    } else if (settings.accountPassword) {
+    if (preferPassword) {
       const passwordMethod = findPasswordMethod();
       if (passwordMethod) {
         passwordMethod.click();
+        return true;
+      }
+    } else {
+      const passkey = findPasskeyAction();
+      if (passkey) {
+        passkey.click();
         return true;
       }
     }
   }
 
   const password = findPasswordInput();
-  if (password && settings.accountPassword && !hasPasskey) {
+  if (password && settings.accountPassword && preferPassword) {
     if (password.value !== settings.accountPassword) {
       fillInput(password, settings.accountPassword);
     }
@@ -171,7 +172,7 @@ async function advanceSignIn(
     }
   }
 
-  if (settings.totpSecret && !email && !password && !hasPasskey) {
+  if (settings.totpSecret && !email && !password && preferPassword) {
     const totpInput = findTotpInput();
     if (totpInput) {
       const remaining =
@@ -200,7 +201,7 @@ async function advanceSignIn(
     }
   }
 
-  if (!hasPasskey && settings.accountPassword && !password) {
+  if (preferPassword && settings.accountPassword && !password) {
     const fallback = findPasswordFallback(true);
     if (fallback) {
       fallback.click();
@@ -208,9 +209,9 @@ async function advanceSignIn(
     }
   }
 
-  if (!hasPasskey) {
+  if (!preferPassword) {
     const passkey = findPasskeyAction();
-    if (passkey && !settings.accountPassword) {
+    if (passkey) {
       passkey.click();
       return true;
     }

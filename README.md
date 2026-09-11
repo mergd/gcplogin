@@ -9,8 +9,10 @@ and authenticator code, selects the account, and clicks **Continue** / **Allow**
 It supports both `gcloud auth login` (including `--update-adc`) and
 `gcloud auth application-default login`.
 
-If a local passkey is enrolled, Cloud SDK login uses that instead of Touch ID.
-Otherwise, a saved password skips passkey screens in favor of password + TOTP.
+A saved password takes priority on Google's password/passkey choice screen and
+continues through password + TOTP. A locally enrolled passkey is used when no
+password is configured; without either stored credential, password is the
+default choice.
 
 While the flow runs, a small badge appears in the corner so you can see it
 is active. It does not observe or modify unrelated page rendering.
