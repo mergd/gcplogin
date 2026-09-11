@@ -22,6 +22,7 @@ function parseArgs(argv) {
   const args = {
     statusOnly: false,
     uploadOnly: false,
+    replacePending: false,
     skipZip: false,
     zipPath: null,
   };
@@ -35,6 +36,9 @@ function parseArgs(argv) {
       case '--upload-only':
         args.uploadOnly = true;
         break;
+      case '--replace-pending':
+        args.replacePending = true;
+        break;
       case '--skip-zip':
         args.skipZip = true;
         break;
@@ -46,7 +50,7 @@ function parseArgs(argv) {
       case '--help':
       case '-h':
         console.log(
-          'Usage: npm run cws:publish -- [--status | --upload-only] [--zip PATH] [--skip-zip]',
+          'Usage: npm run cws:publish -- [--status | --upload-only] [--replace-pending] [--zip PATH] [--skip-zip]',
         );
         process.exit(0);
         break;
@@ -129,6 +133,17 @@ function publishItem(token, publisherId, extensionId) {
   );
 }
 
+function cancelSubmission(token, publisherId, extensionId) {
+  return fetchJson(
+    `${API}/v2/${itemPath(publisherId, extensionId)}:cancelSubmission`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    },
+    'cancelSubmission',
+  );
+}
+
 function latestChromeZip() {
   const outputDirectory = join(process.cwd(), '.output');
   const zips = readdirSync(outputDirectory)
@@ -168,6 +183,14 @@ async function main() {
   if (args.statusOnly) {
     console.log(JSON.stringify(await fetchStatus(token, publisherId, EXTENSION_ID), null, 2));
     return;
+  }
+
+  if (args.replacePending) {
+    const status = await fetchStatus(token, publisherId, EXTENSION_ID);
+    if (status.submittedItemRevisionStatus?.state === 'PENDING_REVIEW') {
+      console.log('Cancelling pending submission before replacement upload…');
+      await cancelSubmission(token, publisherId, EXTENSION_ID);
+    }
   }
 
   if (!args.zipPath && !args.skipZip) await runZip();

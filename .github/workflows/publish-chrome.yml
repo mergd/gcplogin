@@ -53,6 +53,9 @@ jobs:
           CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
         run: |
           ARGS=(--skip-zip)
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            ARGS+=(--replace-pending)
+          fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.upload_only }}" = "true" ]; then
             ARGS+=(--upload-only)
           fi
