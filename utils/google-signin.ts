@@ -1,3 +1,5 @@
+import { clickTargetPriority } from '@/utils/sign-in-method';
+
 const CLOUD_SDK = /Google Cloud SDK|Google Auth Library/i;
 export const CLOUD_SDK_CLIENTS = [
   '32555940559',
@@ -207,9 +209,20 @@ function findClickableByLabel(pattern: RegExp): HTMLElement | undefined {
     );
   });
 
-  return matches.sort(
-    (left, right) => left.innerText.length - right.innerText.length,
-  )[0];
+  return matches.sort((left, right) => {
+    const priority =
+      clickTargetPriority(
+        left.tagName,
+        left.getAttribute('role'),
+        left.hasAttribute('data-challengetype'),
+      ) -
+      clickTargetPriority(
+        right.tagName,
+        right.getAttribute('role'),
+        right.hasAttribute('data-challengetype'),
+      );
+    return priority || left.innerText.length - right.innerText.length;
+  })[0];
 }
 
 export function hasPasskeyPrompt(): boolean {
