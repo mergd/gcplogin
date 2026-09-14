@@ -19,3 +19,15 @@ export function clickTargetPriority(
   if (role === 'button' || role === 'link' || role === 'option') return 0;
   return 1;
 }
+
+export function isAccountChooserUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return (
+      parsed.hostname === 'accounts.google.com' &&
+      /(?:^|\/)(?:accountchooser|signinchooser)(?:\/|$)/i.test(parsed.pathname)
+    );
+  } catch {
+    return false;
+  }
+}

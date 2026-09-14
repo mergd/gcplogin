@@ -126,12 +126,6 @@ async function advanceSignIn(
   settings: Settings,
   hasPasskey: boolean,
 ): Promise<boolean> {
-  const account = findAccount(settings.accountEmail);
-  if (account) {
-    account.click();
-    return true;
-  }
-
   const email = findEmailInput();
   if (email && settings.accountEmail) {
     if (email.value.trim().toLowerCase() !== settings.accountEmail) {
@@ -226,6 +220,14 @@ async function advanceSignIn(
   const consent = findConsentAction();
   if (consent && !email && !password) {
     consent.click();
+    return true;
+  }
+
+  // Account chips also carry data-identifier on challenge and consent pages.
+  // Keep generic account selection behind the page-specific actions above.
+  const account = findAccount(settings.accountEmail);
+  if (account) {
+    account.click();
     return true;
   }
 

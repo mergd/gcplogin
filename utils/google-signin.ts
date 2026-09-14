@@ -1,4 +1,7 @@
-import { clickTargetPriority } from '@/utils/sign-in-method';
+import {
+  clickTargetPriority,
+  isAccountChooserUrl,
+} from '@/utils/sign-in-method';
 
 const CLOUD_SDK = /Google Cloud SDK|Google Auth Library/i;
 export const CLOUD_SDK_CLIENTS = [
@@ -52,6 +55,8 @@ export function isVisible(element: HTMLElement): boolean {
 }
 
 export function findAccount(accountEmail: string): HTMLElement | undefined {
+  if (!isAccountChooserUrl(location.href)) return undefined;
+
   const accounts = [...document.querySelectorAll<HTMLElement>(
     '[data-identifier]',
   )].filter(isVisible);
