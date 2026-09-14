@@ -9,10 +9,10 @@ and authenticator code, selects the account, and clicks **Continue** / **Allow**
 It supports both `gcloud auth login` (including `--update-adc`) and
 `gcloud auth application-default login`.
 
-A saved password takes priority on Google's password/passkey choice screen and
-continues through password + TOTP. A locally enrolled passkey is used when no
-password is configured; without either stored credential, password is the
-default choice.
+Google's password option always takes priority on the password/passkey choice
+screen, including when a local passkey is enrolled or the password will be
+supplied outside the extension. A locally enrolled passkey is used only when
+Google does not offer the password choice and no password is configured.
 
 While the flow runs, a small badge appears in the corner so you can see it
 is active. It does not observe or modify unrelated page rendering.

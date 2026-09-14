@@ -21,6 +21,7 @@ import {
   PASSKEY_STATUS_MESSAGE,
 } from '@/utils/messages';
 import { getSettings, type Settings } from '@/utils/settings';
+import { chooseSignInMethod } from '@/utils/sign-in-method';
 import { generateTotp, TOTP_PERIOD_SECONDS } from '@/utils/totp';
 
 const FALLBACK_SCAN_MS = 1_000;
@@ -125,7 +126,6 @@ async function advanceSignIn(
   settings: Settings,
   hasPasskey: boolean,
 ): Promise<boolean> {
-  const preferPassword = Boolean(settings.accountPassword) || !hasPasskey;
   const account = findAccount(settings.accountEmail);
   if (account) {
     account.click();
@@ -145,23 +145,29 @@ async function advanceSignIn(
   }
 
   if (!email) {
-    if (preferPassword) {
-      const passwordMethod = findPasswordMethod();
-      if (passwordMethod) {
-        passwordMethod.click();
-        return true;
-      }
-    } else {
-      const passkey = findPasskeyAction();
-      if (passkey) {
-        passkey.click();
-        return true;
-      }
+    const passwordMethod = findPasswordMethod();
+    const passkey =
+      hasPasskey && !settings.accountPassword
+        ? findPasskeyAction()
+        : undefined;
+    const method = chooseSignInMethod(
+      Boolean(passwordMethod),
+      Boolean(passkey),
+    );
+
+    if (method === 'password') {
+      passwordMethod!.click();
+      return true;
+    }
+
+    if (method === 'passkey') {
+      passkey!.click();
+      return true;
     }
   }
 
   const password = findPasswordInput();
-  if (password && settings.accountPassword && preferPassword) {
+  if (password && settings.accountPassword) {
     if (password.value !== settings.accountPassword) {
       fillInput(password, settings.accountPassword);
     }
@@ -172,7 +178,7 @@ async function advanceSignIn(
     }
   }
 
-  if (settings.totpSecret && !email && !password && preferPassword) {
+  if (settings.totpSecret && !email && !password) {
     const totpInput = findTotpInput();
     if (totpInput) {
       const remaining =
@@ -201,7 +207,7 @@ async function advanceSignIn(
     }
   }
 
-  if (preferPassword && settings.accountPassword && !password) {
+  if (settings.accountPassword && !password) {
     const fallback = findPasswordFallback(true);
     if (fallback) {
       fallback.click();
@@ -209,7 +215,7 @@ async function advanceSignIn(
     }
   }
 
-  if (!preferPassword) {
+  if (hasPasskey && !settings.accountPassword) {
     const passkey = findPasskeyAction();
     if (passkey) {
       passkey.click();

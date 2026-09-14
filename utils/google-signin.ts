@@ -139,6 +139,11 @@ export function findPasskeyAction(): HTMLElement | undefined {
 }
 
 export function findPasswordMethod(): HTMLElement | undefined {
+  const passwordChallenge = [
+    ...document.querySelectorAll<HTMLElement>('[data-challengetype="1"]'),
+  ].find(isVisible);
+  if (passwordChallenge) return passwordChallenge;
+
   return findClickableByLabel(PASSWORD_METHOD);
 }
 

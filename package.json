@@ -2,7 +2,7 @@
   "name": "gcp-auth-skip",
   "description": "Completes Google Cloud CLI and Application Default Credentials browser sign-in.",
   "private": true,
-  "version": "1.2.5",
+  "version": "1.2.6",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -11,6 +11,7 @@
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "compile": "tsc --noEmit",
     "cws:status": "node scripts/cws-publish.mjs --status",
     "cws:upload": "node scripts/cws-publish.mjs --upload-only",
